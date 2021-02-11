@@ -3,8 +3,14 @@
 error_reporting(0);
 
 $IDB = '425';
+/*
+$FLD = 'TI';
+$QUERY = 'Северные крепости';
+*/
 $FLD = 'ID';
 $QUERY = '*';
+
+
 
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
@@ -50,15 +56,22 @@ function searchOPAC($idb, $fld, $query){
                 foreach ($list as $l) {
                     //echo "$l[leader]"; !BREVE
                     foreach ($l['fields'] as $field) {
-                       if ($field[tag] == '856' OR $field[tag] == '300') { //$field[tag] == '200' OR $field[tag] == '300' OR
+                        if ($field[tag] == '856' OR $field[tag] == '300') { //$field[tag] == '200' OR $field[tag] == '300' OR
                             echo " $field[tag]   "; // !BREVE $filed[ind1] $field[ind2]$field[data]
                         if (count($field['subfields']) > 0 ) {
                             foreach ($field['subfields'] as $f) {
+                                if ($field[tag] == '856'){
                                 $http_code = getServerResponse($f[data]);
                                 echo "  $f[data]  HTTP/1.1 $http_code ";//!BREVE  $f[code]
+                                }else{
+                                    $lastReadDate = preg_match_all('/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/',$f[data],$out, PREG_OFFSET_CAPTURE);
+                                   if ($lastReadDate){print_r('Дата обращения к ресурсу - '.$out[0][0][0].'<br>');}
+                                }
                                 }
                         }
                         echo "<br>";
+                        } // -- END SELECT TAG 856 AND TAG 300
+
                         }
                     }
                 }
@@ -66,7 +79,6 @@ function searchOPAC($idb, $fld, $query){
         } else {
             return false;
         }
-    }
 } // --- END OF searchOPAC
 
 function searchquery($token, $dbId, $fld, $query) {
