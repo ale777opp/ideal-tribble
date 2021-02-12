@@ -19,7 +19,7 @@ print_r('query = '.$QUERY.'<br>');
 searchOPAC($IDB, $FLD, urlencode($QUERY));
 
 function searchOPAC($idb, $fld, $query){
-
+    $today = date("d.m.Y");
     $ch = curl_init();
     $request = [
         'grant_type' => 'password',
@@ -64,8 +64,8 @@ function searchOPAC($idb, $fld, $query){
                                 $http_code = getServerResponse($f[data]);
                                 echo "  $f[data]  HTTP/1.1 $http_code ";//!BREVE  $f[code]
                                 }else{
-                                    $lastReadDate = preg_match_all('/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/',$f[data],$out, PREG_OFFSET_CAPTURE);
-                                   if ($lastReadDate){print_r('Дата обращения к ресурсу - '.$out[0][0][0].'<br>');}
+                                $lastReadDate = preg_filter('/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/',$today,$f[data]);
+                                if ($lastReadDate){print_r($lastReadDate);}
                                 }
                                 }
                         }
