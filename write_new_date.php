@@ -1,28 +1,4 @@
 <?php
-//error_reporting(E_ALL);
-/*запрос:
-Request URL
-https://opac-global.ru/api/v1/databases/20/records/LIBID%25255CBIBL%25255C0000000001?options[views]=SHOTFORM%2CLINEORD
-https://opac-global.ru/api/v1/
-databases/ - 20
-records/  - LIBID%25255CBIBL%25255C0000000001
-?options[views]=
-SHOTFORM%2CLINEORD (поле пробел значение)
---------------
-"accept: application/vnd.api+json" - добавить в cURL
-
-запись:
-Request URL
-https://opac-global.ru/api/v1/databases/20/records/LIBID%25255CBIBL%25255C0000000001
-"accept: application/vnd.api+json"
-"Content-Type: application/vnd.api+json" - добавление в cURL
- -d "{
-\"data\":[{\"op\":\"add\",
-\"type\":\"marcrecord\",\"attributes\":{\"fields\":[{\"tag\":\"003\",\"data\":\"http://localhost/records/record.xml\"},
-{\"tag\":\"856\",\"ind1\":\"4\",\"ind2\":\"0\",\"subfields\":[{\"code\":\"u\",\"data\":\"http://localhost/files/document.pdf\"}]}]}},
-{\"op\":\"remove\",
-\"type\":\"marcrecord\",\"attributes\":{\"fields\":[{\"tag\":\"003\",\"data\":\"http://localhost/records/record.xml\"}]}}]}"
-*/
 $today = date("d.m.Y");
 $yesterday = mktime(0, 0, 0,  date("d")-1, date("m")  ,date("y"));;
 $tomorrow  = mktime(0, 0, 0,  date("d")+1, date("m")  ,date("y"));
