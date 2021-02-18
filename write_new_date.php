@@ -1,5 +1,5 @@
 <?php
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 /*запрос:
 Request URL
 https://opac-global.ru/api/v1/databases/20/records/LIBID%25255CBIBL%25255C0000000001?options[views]=SHOTFORM%2CLINEORD
@@ -39,8 +39,6 @@ if ($result){ print_r($out[0][0][0]);}
 $result = preg_filter('/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/',$today,$field_300);
 if ($result){print_r($result.'<br>');}
 
-error_reporting(0);
-
 $IDB = '425';
 
 $FLD = 'TI';
@@ -74,18 +72,19 @@ function searchOPAC($idb, $fld, $query){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $auth = json_decode(curl_exec($ch));
+    $token = $auth->access_token;
     $httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 
     print_r('Код запроса авторизации = '.$httpcode.'<br>');
-    /*
-    print_r('Токен авторизации <br>');
+ /*
+    print_r('Токен авторизации = '.$token.'<br>');
     echo "<pre>";
     print_r($auth);
     echo "</pre>";
     */
     if ($httpcode === 200) {
-        $record = searchquery($auth->access_token, $idb, $fld, $query);
-        print_r($record['data'][0]['attributes']['fields'][12]['subfields'][0]['data'].'<br>'); // 300
+        $record = searchquery($token, $idb, $fld, $query);
+        print_r($record['data'][0]['attributes']['fields'][14]['subfields'][0]['data'].'<br>'); // 300
     /*    print_($record['data'=> ['attributes' => ['fields' => [12 =>['subfields' => [0 =>['data' => 'test']
 	]
 ]
@@ -102,30 +101,73 @@ function searchOPAC($idb, $fld, $query){
     print_r($record['data']);
     echo "</pre>";
 */
+// ------ BEGIN OF CHANGE OF DB RECORD
+$ch = curl_init();
 
-    $ch = curl_init();
-    $request = array('data'=> array('attributes' => array('fields' => array([12] =>array('subfields' => array([0] =>array('data' => 'test')
-	)
-)
-)
-)
-)
-    );
-    curl_setopt($ch, CURLOPT_URL, "http://192.168.1.44/api/v1/databases/".$IDB."/records");
+$request = [ "data" => [
+    "op" => "add",
+    "type" => "marcrecord",
+    "attributes" => [
+        "fields" => [
+            [
+            "tag" => "005",
+            "data" => "http://localhost/records/record.xml"
+          ],
+          [
+            "tag" => "856",
+            "ind1" => "4",
+            "ind2" => "0",
+            "subfields" => [
+                "code" => "u",
+                "data" => "http://localhost/files/document.pdf"
+            ]
+          ]
+        ]
+    ]
+  ]
+];
+$request2 = [ "data" => [
+"op" => "remove",
+"type" => "marcrecord",
+"attributes" => [
+    "fields" => [
+        ["tag" =>"324",
+        "data" =>"$today"
+        ]
+    ]
+    ]
+  ]
+];
+$data_string = json_encode($request2, JSON_UNESCAPED_UNICODE);
+// $request = array('data'=> array('attributes' => array('fields' => array([12] =>array('subfields' => array([0] =>array('data' => 'test')))))));
+$idRecord = 'RSLA\\\BIBL\\\0000214413'; //'LIBID%25255CBIBL%25255C0000214413';
+$question = "http://192.168.1.44/api/v1/databases/425/records/".$idRecord;
+    curl_setopt($ch, CURLOPT_URL, $question);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request));
-
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string); // http_build_query($request2)
+    /*
     echo "<pre>";
     print_r($request);
     echo "</pre>";
+    */
 
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded', 'Accept: application/json'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json','Accept: application/vnd.api+json','authorization: Bearer ' . $token)); //'Content-Length: ' . strlen($data_string),
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $write = json_decode(curl_exec($ch));
     $httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    $write = json_decode(curl_exec($ch));
+    //if(curl_close($ch)){$write = json_decode(curl_exec($ch));}
+    //print_r('Токен авторизации = '.$token.'<br>');
+
+    echo "<pre>";
+    print_r($request2);
+    echo "</pre>";
+
+    echo "<pre>";
+    print_r($write);
+    echo "</pre>";
 
     print_r('Код запроса записи = '.$httpcode.'<br>');
+    // ------ END OF CHANGE OF DB RECORD
 
     }
 } // --- END OF searchOPAC
@@ -137,7 +179,8 @@ function searchquery($token, $dbId, $fld, $query) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	$search = json_decode(curl_exec($ch), true); // curl_exec($ch);
     $httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    print_r('Запрос = '.$request.'<br>');
+
+    print_r('Запрос = '.$search['links']['self'].'<br>');
     print_r('Код ответа на запрос = '.$httpcode.'<br>');
 /*
     echo "<pre>";
