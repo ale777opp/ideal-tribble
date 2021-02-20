@@ -85,8 +85,10 @@ function searchRecord($token, $dbId, $libid)
             return false;
         }
 } //  ---END OF searchquery
-
-
-
+function isJSON($string){
+$error = is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+print_r(json_last_error_msg());
+return $error;
+} //  ---END OF isJSON
 
 ?>
