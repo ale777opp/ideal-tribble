@@ -1,4 +1,5 @@
 <?php
+// new record
 $request = [
   "data" => [
     "type" => "marcrecord",
@@ -56,7 +57,7 @@ $request = [
           "subfields" => [
              [
               "code" => "a",
-              "data" => "Южные крепости"
+              "data" => "Северные крепости"
              ]
           ]
          ],
@@ -154,4 +155,53 @@ $request = [
      ]
    ]
 ];
+// add info in field of records
+$record_field_add = [
+  "data" => [
+    [
+      "op" => "add",
+      "type" => "marcrecord",
+      "attributes" => [
+        "fields" => [
+           [
+            "tag" => "300",
+            "ind1" => " ",
+            "ind2" => " ",
+            "subfields" => [
+              [
+                "code" =>"a",
+                "data" => "Дата обращения к ресурсу 20.02.2021"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+];
+// remove info of field of records  300 ##$aДата обращения к ресурсу 02.10.2013
+$record_field_remove = [
+	 "data" => [
+	 [
+      "op" => "remove",
+      "type" => "marcrecord",
+      "attributes" => [
+        "fields" => [
+          [
+            "tag" => "300",
+            "ind1" => " ",
+            "ind2" => " ",
+            "subfields" => [
+              [
+                "code" =>"a",
+                "data" => "Дата обращения к ресурсу 02.10.2013"
+              ]
+          ]
+        ]
+      ]
+    ]
+   ]
+  ]
+];
+
 ?>
