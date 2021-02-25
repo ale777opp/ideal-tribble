@@ -2,6 +2,11 @@
 error_reporting(E_ALL);
 require_once('class.ip_adress_json.php');
 require('config.php');
+
+$FLD = 'TI';
+$QUERY = 'Южные крепости';
+//$QUERY = 'Северные крепости';
+
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
 print_r('query = '.$QUERY.'<br>');
@@ -10,7 +15,7 @@ print_r('query = '.$QUERY.'<br>');
 $Token = $auth->access_token;
 
 if ($httpcode === 200) {
-['code' => $httpcode, 'content' => $result] = searchRecord($Token, $IDB, 'RSLA%255CBIBL%255C0000474020');// $LIBID
+['code' => $httpcode, 'content' => $result] = searchRecord($Token, $IDB, $LIBID);
 }
 if ($httpcode == 200) {
     /*
@@ -42,32 +47,8 @@ foreach ($result['data'] as $list) {
                 }
             }
 */
-
-}
-// ------ BEGIN OF CHANGE OF DB RECORD
 require_once('request.php');
-
-$data_string = json_encode($record_field_add,JSON_UNESCAPED_UNICODE);
-if(isJSON($data_string)) {echo "  JSON Valid!<br>";}else{echo "  JSON Bad-bad-bad!<br>";}
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "http://192.168.1.44/api/v1/databases/425/records/RSLA%255CBIBL%255C0000474021");
-curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json','Accept: application/vnd.api+json','Content-Length: ' . strlen($data_string),'authorization: Bearer ' . $Token));
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$write = json_decode(curl_exec($ch));
-$httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-print_r('Код запроса создания записи = '.$httpcode.'<br>');
-
-echo "<pre>";
-print_r($write);
-echo "</pre>";
-// ------ END OF CHANGE OF DB RECORD
+writeRecord($Token, $IDB, $LIBID,$record_field);
+}
 
 ?>

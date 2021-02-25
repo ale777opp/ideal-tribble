@@ -156,10 +156,10 @@ $request = [
    ]
 ];
 // add info in field of records
-$record_field_add = [
+$record_field = [
   "data" => [
     [
-      "op" => "add",
+      "op" => "replace", // add,remove,replace
       "type" => "marcrecord",
       "attributes" => [
         "fields" => [
@@ -180,28 +180,5 @@ $record_field_add = [
   ]
 ];
 // remove info of field of records  300 ##$aДата обращения к ресурсу 02.10.2013
-$record_field_remove = [
-	 "data" => [
-	 [
-      "op" => "remove",
-      "type" => "marcrecord",
-      "attributes" => [
-        "fields" => [
-          [
-            "tag" => "300",
-            "ind1" => " ",
-            "ind2" => " ",
-            "subfields" => [
-              [
-                "code" =>"a",
-                "data" => "Дата обращения к ресурсу 02.10.2013"
-              ]
-          ]
-        ]
-      ]
-    ]
-   ]
-  ]
-];
 
 ?>
