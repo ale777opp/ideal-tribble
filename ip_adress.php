@@ -2,9 +2,12 @@
 error_reporting(E_ALL);
 require_once('class.ip_adress_json.php');
 require('config.php');
-
+/*
 $FLD = 'ID';
 $QUERY = '*';
+*/
+$FLD = 'TI';
+$QUERY = 'северные крепости';
 
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
@@ -28,8 +31,8 @@ foreach ($selected_ID as $current_ID) {// -----START OF PARCER
 print_r($current_ID.'<br>');
    ['code' => $httpcode, 'content' => $result] = searchRecord($Token, $IDB, $current_ID);
 if ($httpcode == 200) { // -------- START of processing the result
-
-foreach ($result['data']['attributes'] as $fields) {
+$current_record = $result['data'];
+foreach ($current_record['attributes'] as $fields) {
     if (is_array($fields)) {
         foreach ($fields as $tags) {
             if ($tags['tag'] == '200' OR $tags['tag'] == '300' OR $tags['tag'] == '856'){
@@ -40,8 +43,10 @@ foreach ($result['data']['attributes'] as $fields) {
                         break;
                     case '300':
                     $last_date = preg_match($FILTER_DATE,$current_tag['data']);
-
                     if ($last_date) {$response_date = $current_tag['data'];
+                    $new_date = preg_filter($FILTER_DATE,$TODAY,$current_tag['data']);
+                    $current_tag['data'] = $new_date;
+                    print_r('вывод после замены = '.$current_tag['data'].'<br>');
                     } else {$response_date = 'Нет даты предыдущего обновления';}
                         break;
                     case '856':
@@ -61,7 +66,12 @@ print_r($response_date.'<br>');
 print_r($response_http.'<br>');
 $source_response = getServerResponse($response_http);
 print_r($source_response);
-($source_response == '200' OR $source_response == '30*') ? print_r(" - Сайт жив.<br>") : print_r(" - Сайт умер.<br>");
+
+echo "<pre>";
+print_r($current_record);
+echo "</pre>";
+
+($source_response == '200' OR $source_response == '301') ? print_r(" - Сайт жив.<br>") : print_r(" - Сайт умер.<br>");
 echo "---</pre>";
 }// -------- START of processing the result
 }// -----END OF PARCER

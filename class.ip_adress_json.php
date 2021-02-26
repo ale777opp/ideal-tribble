@@ -101,13 +101,7 @@ function getServerResponse($url) {
     curl_setopt($curlInit,CURLOPT_RETURNTRANSFER,true);
     $response = curl_exec($curlInit); // Выполнение запроса
     $http_code = curl_getinfo($curlInit, CURLINFO_HTTP_CODE);
-    //echo "HTTP/1.1 $http_code <br>";
     curl_close($curlInit); // закрываем CURL
-/*
-echo '<pre>';
-print_r($response);
-echo '</pre>';
-*/
     return $http_code;
 } //---END OF getServerResponse
 

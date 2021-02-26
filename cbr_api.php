@@ -13,16 +13,7 @@ function CBR_XML_Daily_Ru() {
 $data = CBR_XML_Daily_Ru();
 */
 
-$request = '';
-/*[
-        'grant_type' => 'password',
-        'client_id' => '354FE540-6100-436F-A212-7B29C4D09545',
-        'client_secret' => 'rhBQCWiIufQRooTtXcH',
-        'username' => 'PRGUS',
-        'password' => 'wsDCrf7',
-        'scope' => 'read',
-    ];
-*/
+$request = [];
     curl_setopt($ch, CURLOPT_URL,"https://www.cbr-xml-daily.ru/daily_json.js");
     curl_setopt($ch, CURLOPT_POST, 1);
    // curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request));
