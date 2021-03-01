@@ -159,7 +159,7 @@ $request = [
 $record_field = [
   "data" => [
     [
-      "op" => "replace", // add,remove,replace
+      "op" => "replace", // add,remove
       "type" => "marcrecord",
       "attributes" => [
         "fields" => [

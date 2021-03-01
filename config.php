@@ -1,7 +1,7 @@
 <?php
 
 $IDB = '425';
-$TODAY = date("d.m.Y");
+$TODAY = date("d.m.Y");//'28.02.2021';
 $FILTER_DATE = '/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/';
 
 $URL_API = 'http://192.168.1.44/api/v1';

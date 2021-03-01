@@ -2,13 +2,13 @@
 error_reporting(E_ALL);
 require_once('class.ip_adress_json.php');
 require('config.php');
-/*
+
 $FLD = 'ID';
 $QUERY = '*';
-*/
+/*
 $FLD = 'TI';
 $QUERY = 'северные крепости';
-
+*/
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
 print_r('query = '.$QUERY.'<br>');
@@ -27,8 +27,11 @@ if ($httpcode === 200) {// -----START OF SELECT RECORDS
     }
     }
 } // -----END OF SELECT RECORDS
+$i=0;
 foreach ($selected_ID as $current_ID) {// -----START OF PARCER
-print_r($current_ID.'<br>');
+$i++;
+echo "-------<br>";
+print_r($i.'. '.$current_ID.'<br>');
    ['code' => $httpcode, 'content' => $result] = searchRecord($Token, $IDB, $current_ID);
 if ($httpcode == 200) { // -------- START of processing the result
 $current_record = $result['data'];
@@ -44,9 +47,7 @@ foreach ($current_record['attributes'] as $fields) {
                     case '300':
                     $last_date = preg_match($FILTER_DATE,$current_tag['data']);
                     if ($last_date) {$response_date = $current_tag['data'];
-                    $new_date = preg_filter($FILTER_DATE,$TODAY,$current_tag['data']);
-                    $current_tag['data'] = $new_date;
-                    print_r('вывод после замены = '.$current_tag['data'].'<br>');
+                    $tag300_old = $tags;
                     } else {$response_date = 'Нет даты предыдущего обновления';}
                         break;
                     case '856':
@@ -60,24 +61,37 @@ foreach ($current_record['attributes'] as $fields) {
         }
     }
     }
-echo "<pre> ---";
 print_r($response_title.'<br>');
 print_r($response_date.'<br>');
 print_r($response_http.'<br>');
 $source_response = getServerResponse($response_http);
-print_r($source_response);
+if ($source_response == '200') print_r("HTTP/1.1 ".$source_response." OK ,- cайт доступен.<br>");
+else if($source_response == '301') print_r("HTTP/1.1 ".$source_response." OK ,caйт доступен(переадресован).<br>");
+else print_r("HTTP/1.1 ".$source_response." - ,caйт не доступен.<br>");
 
-echo "<pre>";
-print_r($current_record);
-echo "</pre>";
 
-($source_response == '200' OR $source_response == '301') ? print_r(" - Сайт жив.<br>") : print_r(" - Сайт умер.<br>");
-echo "---</pre>";
+$tag300_new = $tag300_old;
+$tag300_new['subfields'][0]['data'] = preg_filter($FILTER_DATE,$TODAY,$tag300_old['subfields'][0]['data']);
+
+$tag300_new_json = json_encode($tag300_new,JSON_UNESCAPED_UNICODE);
+$tag300_old_json = json_encode($tag300_old,JSON_UNESCAPED_UNICODE);
+
+$req_begin_add = '{"data":[{"op":"add","type":"marcrecord","attributes":{"fields":[';
+$req_begin_remove = '{"data":[{"op":"remove","type":"marcrecord","attributes":{"fields":[';
+$req_end = ']}}]}';
+
+$request_add = $req_begin_add.$tag300_new_json.$req_end;
+$request_remove = $req_begin_remove.$tag300_old_json.$req_end;
+
+isJSON($request_add);
+isJSON($request_remove);
+
+//$request_add = json_decode($request_add);
+//$request_remove = json_decode($request_remove);
+
+writeRecord($Token, $IDB, $current_ID, $request_remove);
+writeRecord($Token, $IDB, $current_ID, $request_add);
+echo "--------";
 }// -------- START of processing the result
 }// -----END OF PARCER
-
-/*
-require_once('request.php');
-writeRecord($Token, $IDB, $LIBID,$record_field);
-*/
 ?>
