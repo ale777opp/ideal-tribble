@@ -5,12 +5,12 @@ function authOPAC()
 require('config.php');
 require_once('grant.php');
 $request = [
-    'grant_type' => $GRANT_TYPE,
-    'client_id' => $CLIENT_ID,
-    'client_secret' => $CLIENT_SECRET,
-    'username' => $USERNAME,
-    'password' => $PASSWORD,
-    'scope' => $SCOPE,
+    'grant_type' => GRANT_TYPE,
+    'client_id' => CLIENT_ID,
+    'client_secret' => CLIENT_SECRET,
+    'username' => USERNAME,
+    'password' => PASSWORD,
+    'scope' => SCOPE,
 ];
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $URL_API.$REG_AUTH);
@@ -35,6 +35,7 @@ function searchQuery($token, $dbId, $fld, $query)
 require('config.php');
 $query = urlencode($query);
 $request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query;
+print_r($request.'<br>');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON, 'authorization: Bearer ' . $token));
@@ -52,7 +53,7 @@ if ($httpcode == 200) {
 }
 }
 
-function searchRecord($token, $dbId, $libid)
+function searchLibId($token, $dbId, $libid)
 {
 require('config.php');
 $request_URL = $URL_API.$REG_DB."/".$dbId."/records/".$libid;
@@ -70,7 +71,7 @@ if ($httpcode === 200) {
     print_r('Ошибка запроса по LIBID.<br>');
     return false;
 }
-} //  ---END OF searchquery
+} //  ---END OF searchLibId
 
 function isJSON($string){
 $error = is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? false : true ;
@@ -90,7 +91,7 @@ curl_close($ch); // закрываем CURL
 return $http_code;
 } //---END OF getServerResponse
 
-function writeRecord($token, $dbId, $libid,$data_string)
+function writeField($token, $dbId, $libid,$data_string)
 {
 require('config.php');
 $request_URL = $URL_API.$REG_DB."/".$dbId."/records/".$libid;
@@ -109,7 +110,35 @@ if ($httpcode === 200) {
     print_r('Ошибка записи.<br>');
     return false;
 }
-} //  ---END OF writeRecord
+} //  ---END OF writeField
+
+function getLibIdList($token,$dbId,$fld,$query)
+{
+require('config.php');
+$idList = [];
+$query = urlencode($query);
+$request = $URL_API.$REG_DB."/".$dbId."/indexes/".$fld."?filter[query]=".$query."&limit=5";
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $request);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON,'authorization: Bearer ' .$token));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$result = json_decode(curl_exec($ch), true);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+if ($httpcode == 200) {
+    print_r('Код ответа на запрос поиска = '.$httpcode.'<br>');
+    $i = 0;
+    foreach ($result['data'] as $value) {
+        $idList[$i] = $value['attributes']['value'];
+ //   echo "-------<br>";
+ //   print_r($i.'. '.$selected_ID[$i].'<br>');
+    $i++;
+    }
+    return $idList;
+} else {
+    print_r('Ошибка запроса поиска по шаблону. <br>');
+}
+} // -----END OF getLibIdList
 
 //echo "<pre>";print_r($current_tag);echo "</pre>";
 
