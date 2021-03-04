@@ -34,8 +34,8 @@ function searchQuery($token, $dbId, $fld, $query)
 {
 require('config.php');
 $query = urlencode($query);
-$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query;
-print_r($request.'<br>');
+$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query."&limit=5";
+//print_r($request.'<br>');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON, 'authorization: Bearer ' . $token));
@@ -117,7 +117,7 @@ function getLibIdList($token,$dbId,$fld,$query)
 require('config.php');
 $idList = [];
 $query = urlencode($query);
-$request = $URL_API.$REG_DB."/".$dbId."/indexes/".$fld."?filter[query]=".$query."&limit=941";
+$request = $URL_API.$REG_DB."/".$dbId."/indexes/".$fld."?filter[query]=".$query."&limit=5";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON,'authorization: Bearer ' .$token));
