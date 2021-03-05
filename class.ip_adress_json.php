@@ -65,7 +65,7 @@ $result = json_decode(curl_exec($ch), true); // curl_exec($ch);
 $httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 curl_close($ch); // закрываем CURL
 if ($httpcode === 200) {
-    print_r('Код ответа на запрос по LIBID = '.$httpcode.'<br>');
+    //print_r('Код ответа на запрос по LIBID = '.$httpcode.'<br>');
     return ['code' => $httpcode, 'content' => $result];
 } else {
     print_r('Ошибка запроса по LIBID.<br>');
@@ -79,7 +79,9 @@ if ($error) print_r(json_last_error_msg());
 return $error;
 } //  ---END OF isJSON
 
-function getServerResponse($url) {
+function getServerResponse($url)
+{
+require('config.php');
 $ch = curl_init($url); // Инициализация cURL
 curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10); // Установка параметров запроса
 curl_setopt($ch,CURLOPT_HEADER,true);
@@ -88,7 +90,13 @@ curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 $response = curl_exec($ch); // Выполнение запроса
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch); // закрываем CURL
-return $http_code;
+if ($http_code !== NULL) {
+    if (array_key_exists($http_code, $HTTP_CODE_ARRAY)) {
+    $text = $HTTP_CODE_ARRAY[$http_code];
+}
+    else  $text = 'Unknown http status code "' . htmlentities($http_code) . '"';
+}
+return ['code' => $http_code, 'content' => $text];
 } //---END OF getServerResponse
 
 function writeField($token, $dbId, $libid,$data_string)
@@ -104,7 +112,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $write = json_decode(curl_exec($ch));
 $httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 if ($httpcode === 200) {
-    print_r('Код запроса изменения записи = '.$httpcode.'<br>');
+    //print_r('Код запроса изменения записи = '.$httpcode.'<br>');
     return ['code' => $httpcode, 'content' => $write];
     } else {
     print_r('Ошибка записи.<br>');
@@ -117,7 +125,7 @@ function getLibIdList($token,$dbId,$fld,$query)
 require('config.php');
 $idList = [];
 $query = urlencode($query);
-$request = $URL_API.$REG_DB."/".$dbId."/indexes/".$fld."?filter[query]=".$query."&limit=5";
+$request = $URL_API.$REG_DB."/".$dbId."/indexes/".$fld."?filter[query]=".$query."&limit=941";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON,'authorization: Bearer ' .$token));

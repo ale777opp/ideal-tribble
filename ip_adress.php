@@ -55,7 +55,10 @@ foreach ($current_record['attributes'] as $fields) {
 print_r($response_title.'<br>');
 print_r($response_date.'<br>');
 print_r($response_http.'<br>');
+
 $source_response = getServerResponse($response_http);
+
+
 if ($source_response == '200') print_r("HTTP/1.1 ".$source_response." OK, cайт доступен.<br>");
 else if($source_response == '301') print_r("HTTP/1.1 ".$source_response." OK, caйт доступен(переадресован).<br>");
 else print_r("HTTP/1.1 ".$source_response." NOK, caйт не доступен.<br>");
