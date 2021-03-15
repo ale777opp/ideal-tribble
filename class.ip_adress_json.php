@@ -1,4 +1,16 @@
 <?php
+class Timer
+{
+    private static $start = .0;
+    static function start()
+    {
+        self::$start = microtime(true);
+    }
+    static function finish()
+    {
+        return microtime(true) - self::$start;
+    }
+}
 
 function authOPAC()
 {
@@ -25,7 +37,7 @@ if ($httpcode == 200) {
     print_r('Код ответа на запрос авторизации = '.$httpcode.'<br>');
     return ['code' => $httpcode, 'content' => $response];
 } else {
-        print_r('Ошибка авторизации <br>');
+        print_r('Ошибка авторизации. '.$httpcode."  ".$HTTP_CODE_ARRAY[$httpcode].'<br>');
         return false;
 }
 };
@@ -34,21 +46,25 @@ function searchQuery($token, $dbId, $fld, $query)
 {
 require('config.php');
 $query = urlencode($query);
-$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query."&limit=5";
+$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query."&limit=150&position=840";//"&limit=290"
 //print_r($request.'<br>');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array($RESP_CONT_JSON, 'authorization: Bearer ' . $token));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $result = json_decode(curl_exec($ch), true);
+
+//echo "<pre>";print_r($result);echo "</pre>";
+
 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
+
 if ($httpcode == 200) {
     print_r('Код ответа на запрос поиска = '.$httpcode.'<br>');
     print_r('Количество найденных записей = '.$result['meta']['count'].'<br>');
     return ['code' => $httpcode, 'content' => $result];
 } else {
-    print_r('Ошибка запроса поиска по шаблону. <br>');
+    print_r($httpcode."  ".$HTTP_CODE_ARRAY[$httpcode].'<br>');
     return false;
 }
 }
@@ -68,7 +84,7 @@ if ($httpcode === 200) {
     //print_r('Код ответа на запрос по LIBID = '.$httpcode.'<br>');
     return ['code' => $httpcode, 'content' => $result];
 } else {
-    print_r('Ошибка запроса по LIBID.<br>');
+    print_r('Ошибка запроса по LIBID. '.$httpcode."  ".$HTTP_CODE_ARRAY[$httpcode].'<br>');
     return false;
 }
 } //  ---END OF searchLibId
@@ -79,11 +95,11 @@ if ($error) print_r(json_last_error_msg());
 return $error;
 } //  ---END OF isJSON
 
-function getServerResponse($url)
+function getServerResponse($url,$timeout)
 {
 require('config.php');
 $ch = curl_init($url); // Инициализация cURL
-curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10); // Установка параметров запроса
+curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout); // Установка параметров запроса
 curl_setopt($ch,CURLOPT_HEADER,true);
 curl_setopt($ch,CURLOPT_NOBODY,true);
 curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
@@ -115,7 +131,7 @@ if ($httpcode === 200) {
     //print_r('Код запроса изменения записи = '.$httpcode.'<br>');
     return ['code' => $httpcode, 'content' => $write];
     } else {
-    print_r('Ошибка записи.<br>');
+    print_r('Ошибка записи. '.$httpcode."  ".$HTTP_CODE_ARRAY[$httpcode].'<br>');
     return false;
 }
 } //  ---END OF writeField
@@ -144,7 +160,7 @@ if ($httpcode == 200) {
     }
     return $idList;
 } else {
-    print_r('Ошибка запроса поиска по шаблону. <br>');
+    print_r('Ошибка запроса поиска по шаблону. '.$httpcode."  ".$HTTP_CODE_ARRAY[$httpcode].'<br>');
 }
 } // -----END OF getLibIdList
 

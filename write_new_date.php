@@ -17,5 +17,13 @@ if ($result){ print_r($out[0][0][0]);}
 $result = preg_filter('/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/',$today,$field_300);
 if ($result){print_r($result.'<br>');}
 
+//$value = 'http://www.art.nnov.ru/archoteca/index.php';
+$value = 'https://izo-museum.ru/upload/files/2%20rus%20avangard.pdf';
+
+//foreach ($response['http'] as $value)
+			//^(http|https) #^([fh]tt?ps?) http[s]?
+$val = preg_match('/http[s]?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?/',$value, $matches, PREG_OFFSET_CAPTURE);
+echo "<pre>";print_r($matches);echo "</pre>";
+
 
 ?>
