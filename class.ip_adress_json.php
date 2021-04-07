@@ -1,7 +1,14 @@
 <?php
+
+define ('LIMIT', '&limit=');
+define ('OPTIONS', '&options[views]=');
+define ('SHOTFORM', 'SHOTFORM');
+define ('LINEORD', 'LINEORD');
+define ('SPACE', '%20');
+
 class Timer
 {
-    private static $start = .0;
+private static $start = .0;
     static function start()
     {
         self::$start = microtime(true);
@@ -45,8 +52,7 @@ if ($httpcode == 200) {
 function searchQuery($token, $dbId, $fld, $query)
 {
 require('config.php');
-$query = urlencode($query);
-$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.$SPACE.$query."&limit=150&position=840";//"&limit=290"
+$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.SPACE.$query;
 //print_r($request.'<br>');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);

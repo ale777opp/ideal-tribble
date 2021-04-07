@@ -2,24 +2,35 @@
 error_reporting(E_ALL);
 require_once('class.ip_adress_json.php');
 Timer::start();
+
 require('config.php');
 
 $FLD = 'ID';
 $QUERY = '*';
+$LIMIT  = 500;
 
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
 print_r('query = '.$QUERY.'<br>');
+print_r('limit = '.$LIMIT.'<br>');
 
 ['code' => $httpcode, 'content' => $auth] = authOPAC();
 if ($httpcode === 200) {// -----START AUTH
 $Token = $auth->access_token;
 $selected_ID = [];
 $Statistic = array_fill_keys(array_keys($HTTP_CODE_ARRAY), 0);
-$LogArray[] = "Время формирования отчёта: ".date("d.m.Y  H:i:s")."\n\n\r";
-$item_csv[] = "Время формирования отчёта: ".date("d.m.Y  H:i:s")."\n\n\r";
+$LogArray[] = "Время формирования отчёта: ".date("d.m.Y  H:i:s")."\n\r";
+$item_csv[] = "Время формирования отчёта: ".date("d.m.Y  H:i:s")."\n\r";
+$LogArray[] = "URL базы данных: ".$URL_API."\n\n\r";
+$item_csv[] = "URL базы данных: ".$URL_API."\n\n\r";
+
 $web_arhive_value = 0;
 
+$QUERY = urlencode($QUERY);
+$QUERY = $QUERY.LIMIT.$LIMIT.OPTIONS.LINEORD;
+//print_r($QUERY);
+//"&limit=941&options[views]=SHOTFORM LINEORD";
+//"&limit=290""&limit=150&position=840"  ."&limit=295"
 ['code' => $httpcode, 'content' => $result] = searchQuery($Token,$IDB,$FLD,$QUERY);
 
 //echo "<pre>";print_r($result['links']);echo "</pre>";
@@ -29,6 +40,7 @@ $web_arhive_value = 0;
     $i = 0;
     foreach ($result['data'] as $value) {
         $selected_ID[$i] = $value['id'];
+    //echo "<pre>";print_r($value);echo "</pre>";
     $i++;
     }
     }// -----END OF SELECT RECORDS
@@ -114,7 +126,7 @@ print_r($server_code."<br>");
 
 preg_match($FILTER_DATE,$response['date'], $matches);
 if (empty($matches)) $matches[0] = 0;
-$item_csv_row = $response['libid'].",".$response['title'].",".$matches[0].",".$l.",".$source_response['code'].",".$source_response['content'].";"."\n";//
+$item_csv_row = $response['libid']."#".$response['title']."#".$matches[0]."#".$l."#".$source_response['code']."#".$source_response['content'].";"."\n";//
 }
 //}
 
