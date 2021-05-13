@@ -27,7 +27,7 @@ $item_csv[] = "URL базы данных: ".$URL_API."\n\n\r";
 $web_arhive_value = 0;
 
 $QUERY = urlencode($QUERY);
-$QUERY = $QUERY.LIMIT.$LIMIT.OPTIONS.LINEORD;
+$QUERY = $QUERY.LIMIT.$LIMIT."&position=499".OPTIONS.LINEORD;
 //print_r($QUERY);
 //"&limit=941&options[views]=SHOTFORM LINEORD";
 //"&limit=290""&limit=150&position=840"  ."&limit=295"
