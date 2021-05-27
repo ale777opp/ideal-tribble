@@ -1,10 +1,10 @@
 <?php
 
-$IDB = '425';
+$IDB = '400';
 $TODAY = date("d.m.Y");//'28.02.2021';date("d.m.Y");
 $FILTER_DATE = '/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/';
 
-$URL_API = 'http://192.168.1.214/api/v1';
+$URL_API = 'http://192.168.1.44/api/v1';
 $REG_AUTH = '/oauth2/token';
 $REG_DB = '/databases';
 $REG_REC = '/records?filter[query]=';
