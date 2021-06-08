@@ -1,1 +1,0 @@
-HTTP/1.0 301 Moved PermanentlyHTTP/1.1 200 OkHTTP/1.1 301 Moved PermanentlyHTTP/1.1 200 OK

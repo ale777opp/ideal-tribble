@@ -1,26 +1,31 @@
 <?php
+//const TODAY = date("d.m.Y");//'28.02.2021';date("d.m.Y");
+const FILTER_DATE = '/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/';
 
-$IDB = '400';
-$TODAY = date("d.m.Y");//'28.02.2021';date("d.m.Y");
-$FILTER_DATE = '/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/';
+const IDB = '400';
+const URL_API = 'http://192.168.1.44/api/v1';
+const REQUEST_AUTH = '/oauth2/token';
+const REQUEST_DB = '/databases';
+const REQUEST_REC = '/records?filter[query]=';
+const REQUEST_CONTENT_URL = 'Content-Type: application/x-www-form-urlencoded';
+const REQUEST_CONTENT_JSON = 'Content-Type: application/json';
+const RESPONSE_CONTENT_JSON = 'Accept: application/vnd.api+json';
+//const REQUEST_CONTENT_JSON = 'Content-Type: application/vnd.api+json';
 
-$URL_API = 'http://192.168.1.44/api/v1';
-$REG_AUTH = '/oauth2/token';
-$REG_DB = '/databases';
-$REG_REC = '/records?filter[query]=';
+const LINKS_NOT_CORRECT = 'log_';
+const STATISTIC_CSV = 'statistic_';
 
-//$LIBID = 'RSLA%255CBIBL%255C0000214413';
-$LIBID = 'RSLA%255CBIBL%255C0000474018';
+const TIMEOUT_DEFAULT = 3;
+const SPACE = '%20';
 
-$REG_CONT_URL = 'Content-Type: application/x-www-form-urlencoded';
-$REG_CONT_JSON = 'Content-Type: application/json';
-$RESP_CONT_JSON = 'Accept: application/vnd.api+json';
+const LIMIT = '&limit=';
+const OPTIONS = '&options[views]=';
+const POSITION = '&position=';
+const SP = '%2C';
+const SHOTFORM = 'SHOTFORM';
+const LINEORD = 'LINEORD';
 
-$LINKS_NOT_CORRECT = 'log_';
-$STATISTIC_CSV = 'statistic_';
-$TIMEOUT_DEFAULT = 3;
-
-$HTTP_CODE_ARRAY = ["100" =>"Продоложить (Continue)",
+const HTTP_CODE_ARRAY = ["100" =>"Продоложить (Continue)",
                     "101" =>"Переключение протоколов (Switching Protocols)",
                     "102" =>"Идёт обработка (Processing)",
                     "103" =>"Ранняя метаинформация (Early Hints)",
@@ -94,7 +99,6 @@ $HTTP_CODE_ARRAY = ["100" =>"Продоложить (Continue)",
                     "524" =>"Время ожидания истекло (A Timeout Occurred)",
                     "525" =>"Квитирование SSL не удаось (SSL Handshake Failed)",
                     "526" =>"Недействительный сертификатSSL (Invalid SSL Certificate)",
-                    "noValue"=>"Неизвестный код состояния (Unknown status code)"
+                    "noValue"=>"Неизвестный код состояния (Unknown status code)",
 ];
-
 ?>
