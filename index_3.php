@@ -15,38 +15,29 @@ if ($auth->httpcode === 200){ //запрос при успешной автор�
 	$TOKEN = $auth->result->access_token;
 }
 
-$result_array =file("jpg_source_3.csv");// имя файла для обработки
-
-$result_array = array_unique($result_array);
+$result_array =file("jpg_source_unique280620211736.csv");// имя файла для обработки
 
 $COUNT = count($result_array);
 echo "Колличество записей => $COUNT <br>";
 
-$LIMIT  = 1000; //950;
 $idWithProblems = array();
 $item_csv = array();
 $NoResource = array();
-//$i = 0;
-for ($i = 9000;$i<=10000;$i=$i+$LIMIT) {// цикл перебора $COUNT
-//echo "Start Position is : $i <br>";
-    for ($j = 0; $j <$LIMIT; $j++){//$LIMIT
-$k = $i+$j;
-echo "i=>".$i."  j=>".$j."<br>";
+$i = 0;
+foreach ($result_array as $LibId) {// цикл перебора $COUNT
 
-// foreach ($result_array as $LibId) {// формирование массива
+echo "i=>".$i."  j=>".$LibId."<br>";
 
-$LibId = $result_array[$k];
-echo "LibId => $LibId <br>";
 $current_Id = new FieldLibId($TOKEN,IDB, $LibId);
-Servises::ErrorCodeHendler($current_Id ->class_name, $current_Id ->httpcode,$current_Id->errno);
+Servises::ErrorCodeHandler($current_Id ->class_name, $current_Id ->httpcode,$current_Id->errno);
 if ($current_Id->httpcode >= 400) {
 $item_csv_row = "-------\n".$LibId."\n Код - ".$current_Id->httpcode." - ".HTTP_CODE_ARRAY[$current_Id->httpcode]."\n";
     $item_csv[]= $item_csv_row;
     $idWithProblems[] = $LibId;
 }else{
 foreach ($current_Id ->response as $fields) {
-		$field = $fields[attributes][fields];
-			if (is_array($field)) {
+  $field = $fields[attributes][fields];
+		if (is_array($field)) {
 			foreach ($field as $tags) {
 				if ($tags[tag]==856) {
 			 	$subField = $tags[subfields];
@@ -109,13 +100,11 @@ $request_correction = '{
 
 ]
 }';
-
 //echo "Request $request_correction <br>";
 
 Servises::isJSON($request_correction);
-
 $writeField = new setFields($TOKEN, IDB, $LibId, $request_correction);
-Servises::ErrorCodeHendler($writeField ->class_name, $writeField ->httpcode,$writeField ->errno);
+Servises::ErrorCodeHandler($writeField ->class_name, $writeField ->httpcode,$writeField ->errno);
 //echo "Результат запроса: {$writeField ->httpcode}<br>";
 
 if ($writeField->httpcode >= 400) {
@@ -126,11 +115,11 @@ if ($writeField->httpcode >= 400) {
     $idWithProblems[] = $LibId;
 }else{
     $serverRequest = new getServerResponse($newIpAddress,3);
-    Servises::ErrorCodeHendler($serverRequest ->class_name, $serverRequest ->httpcode,$serverRequest ->errno);
+    Servises::ErrorCodeHandler($serverRequest ->class_name, $serverRequest ->httpcode,$serverRequest ->errno);
 //    echo "Результат запроса: {$serverRequest ->httpcode}<br>";
     echo "Проверка ссылки: {$newIpAddress}<br>";
         if ($serverRequest ->httpcode >= 400) {// Пишем содержимое в файл
-          $NoResource_row = "-------\n".$LibId.$newIpAddress."\n Код - ".$serverRequest ->error."\n -  "."Ошибка существования ресурса"."\n";
+        $NoResource_row = "-------\n".$LibId.$newIpAddress."\n Код - ".$serverRequest ->error."\n -  "."Ошибка существования ресурса"."\n";
           $NoResource[]= $NoResource_row;
           $idWithProblems[] = $LibId;
         }
@@ -146,7 +135,7 @@ if ($writeField->httpcode >= 400) {
 }
 }
 }
-} //$LIMIT
+$i++;
 } // цикл перебора $COUNT
 
 //echo "<pre>";print_r($idWhith856);echo "</pre>";
@@ -156,7 +145,6 @@ $test = date("dmYHi");//"test"
 $STATISTIC_CSV = "ProblemsCorrection".$test.".csv";
 file_put_contents($STATISTIC_CSV, $item_csv, LOCK_EX);
 
-$test = date("dmYHi");//"test"
 $STATISTIC_CSV = "NoResource".$test.".csv";
 file_put_contents($STATISTIC_CSV, $NoResource, LOCK_EX);
 

@@ -26,7 +26,7 @@ private static $error = '';
     return;
     }
 
-static function ErrorCodeHendler($class_name,$httpcode,$errno)
+static function ErrorCodeHandler($class_name,$httpcode,$errno)
 {
 if ($errno){
     $error = ' cURL '.curl_strerror($errno);
