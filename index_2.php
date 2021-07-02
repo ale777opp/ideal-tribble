@@ -17,20 +17,18 @@ $result_array =file("test_db_400_all.csv");
 $COUNT = count($result_array);
 echo "Количество записей => $COUNT <br>";
 
-$LIMIT  = 1000; //950;
+//$LIMIT  = 1000; //950;
 
 $test = date("dmYHi");//"test"
 $STATISTIC_CSV = "jpg_source".$test.".csv";
-
-for ($i = 207000;$i<=$COUNT;$i=$i+$LIMIT) {// цикл перебора $COUNT
-echo "Start Position is : $i <br>";
+$i = 0;
 $idWithJPG[] ='';
-for ($j = 0;$j<$LIMIT;$j++){
-	$k = $i+$j;
-	echo "i=>".$i."  j=>".$j."<br>";
-	$LibId = $result_array[$k];
+
+foreach ($result_array as $LibId) {// цикл перебора $COUNT
+echo "Current №: $i LibId : $LibId<br>";
+//if ($i>100) break;
 	if (!empty($LibId)){
-		echo "libid $LibId <br>";
+
 	$current_Id = new FieldLibId($TOKEN,IDB, $LibId);
   	Servises::report($current_Id->httpcode);
 		foreach ($current_Id ->response as $fields) {
@@ -45,6 +43,7 @@ for ($j = 0;$j<$LIMIT;$j++){
 			 				if ($ip_address[code] == 'u') {
 			 				if (preg_match( $pattern, $ip_address[data], $matches) == 1) {
 								$idWithJPG[] = $LibId;
+								echo "Адрес ресурса $LibId <br>";
 							}
 							}
 						}
@@ -54,13 +53,11 @@ for ($j = 0;$j<$LIMIT;$j++){
 			}
 		}
 	}
-}
-echo 'count of records $idWithJPG = '.count($idWithJPG).'<br>';
-file_put_contents($STATISTIC_CSV, $idWithJPG);
-
+$i++;
 } // цикл перебора $COUNT
 
-
+echo 'count of records $idWithJPG = '.count($idWithJPG).'<br>';
+file_put_contents($STATISTIC_CSV, $idWithJPG,LOCK_EX);
 
 echo Servises::timer_finish() . ' сек.';
 ?>

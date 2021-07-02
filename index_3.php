@@ -15,7 +15,7 @@ if ($auth->httpcode === 200){ //запрос при успешной автор�
 	$TOKEN = $auth->result->access_token;
 }
 
-$result_array =file("jpg_source_unique280620211736.csv");// имя файла для обработки
+$result_array =file("jpg_source01072021.csv");// имя файла для обработки
 
 $COUNT = count($result_array);
 echo "Колличество записей => $COUNT <br>";
