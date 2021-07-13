@@ -23,7 +23,7 @@ print_r("fld = $FLD <br>");
 print_r("query = $QUERY <br>");
 print_r("limit = $LIMIT <br>");
 print_r("position = $POSITION <br>");
-$pattern = '/\.jpg$/i';
+
 $item_csv[] ='';
 $test = date("dmYHi");//"test"
 $STATISTIC_CSV = "test_db_400_all".$test.".csv";
@@ -32,18 +32,17 @@ for ($i = 864;$i<=$COUNT/$LIMIT;$i++) {// цикл перебора
 $POSITION = $i* $LIMIT;
 $processing = new RequestArrayProcessing($TOKEN,IDB,$QUERY,$LIMIT,$POSITION);
 //Servises::report($processing->httpcode);
-	if ($processing ->httpcode === 200){
+if ($processing ->httpcode === 200){
 echo "<pre>";print_r($processing ->count[count]);echo "</pre><br>";
 $data = $processing ->result['data'];
-foreach ($data as $item){
-	$result_array[] = $item[id]."\n";
-}
-} //обработка 200 кода авторизации
-else {
+	foreach ($data as $item){
+		$result_array[] = $item[id]."\n";
+	}
+	}else { //обработка 200 кода авторизации
 	echo 'Ошибка. '; //get_called_class(),
 	print_r($processing ->code.'  =>  '.HTTP_CODE_ARRAY[$processing ->code].'<br>');
-	return false;
-}
+	//return false;
+	}
 echo "The number of iteration is : $i <br>";
 echo "Start Position is : $POSITION <br>";
 file_put_contents($STATISTIC_CSV, $result_array);//,LOCK_EX
