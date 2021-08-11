@@ -1,9 +1,9 @@
 <?php
 //const TODAY = date("d.m.Y");//'28.02.2021';date("d.m.Y");
 const FILTER_DATE = '/([0-3]\d)(-|\/|\.|\\\)([0,1]\d)\2(20[0-2]\d)/';
-
+const FILTER_JPG = '/(\.jpg$)|(\.png$)/i';
 const IDB = '400';
-const URL_API = 'http://192.168.1.44/api/v1';
+const URL_API = 'http://192.168.1.214/api/v1';
 const REQUEST_AUTH = '/oauth2/token';
 const REQUEST_DB = '/databases';
 const REQUEST_REC = '/records?filter[query]=';

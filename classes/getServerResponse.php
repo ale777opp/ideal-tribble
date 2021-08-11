@@ -1,5 +1,5 @@
 <?php
-Class getServerResponse{
+Class GetServerResponse{
 
 function __construct($url,$timeout)
 {
@@ -20,7 +20,7 @@ $this ->httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 $this ->errno = curl_errno($ch);
 $this ->class_name = get_class();
 curl_close($ch);
-
+return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
 } //---END OF CONSTRUCT
 } //---END OF CLASS
 ?>

@@ -1,13 +1,13 @@
 <?php
-Class setFields{
+Class SetFields{
 
 function __construct($token, $dbId, $libid,$data_string)
 {
 	$this ->token = $token;
 	$this ->dbId = $dbId;
 	$this ->libid = $libid;
-  $this ->libid = trim($this ->libid);
-  $this ->libid= urlencode($this ->libid);
+  	$this ->libid = trim($this ->libid);
+  	$this ->libid = urlencode($this ->libid);
 
 $this ->request= URL_API.REQUEST_DB."/".$this ->dbId."/records/".$this ->libid;
 
@@ -21,7 +21,7 @@ $this ->httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 $this ->errno = curl_errno($ch);
 $this ->class_name = get_class();
 curl_close($ch); // закрываем CURL
+return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
 } //---END OF CONSTRUCT
-
 } //---END OF CLASS
 ?>

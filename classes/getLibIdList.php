@@ -1,5 +1,5 @@
 <?php
-Class getLibIdList{
+Class GetLibIdList{
 	protected $token;
 	protected $dbId;
 	protected $fld;
@@ -20,14 +20,12 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(RESPONSE_CONTENT_JSON,'authorization: Bearer ' .$this ->token));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$result = json_decode(curl_exec($ch), true);
-
-echo "<pre>";print_r($result);echo "</pre>";
-
+$this ->response = json_decode(curl_exec($ch), true);
 $this ->httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$this ->errno = curl_errno($ch);
+$this ->class_name = get_class();
 curl_close($ch);
-
-return;
+return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
 }
 }
 ?>
