@@ -30,10 +30,28 @@ $STATISTIC_CSV = "test_db_400_{$SubDB}_{$time}.csv";
 
 while($POSITION<$COUNT){
 $processing = new RequestArrayProcessing($TOKEN,IDB,$QUERY,$LIMIT,$POSITION);
+<<<<<<< HEAD
 $COUNT = $processing ->response[meta][count];
 //echo "<pre>записей =>  ";print_r($processing ->response[meta][count]);echo "</pre>";
 $data = $processing ->response['data'];
 foreach ($data as $item) $result_array[] = $item[id]."\n";
+=======
+//Servises::report($processing->httpcode);
+if ($processing ->httpcode === 200){
+echo "<pre>";print_r($processing ->count[count]);echo "</pre><br>";
+$data = $processing ->result['data'];
+	foreach ($data as $item){
+		$result_array[] = $item[id]."\n";
+	}
+	}else { //обработка 200 кода авторизации
+	echo 'Ошибка. '; //get_called_class(),
+	print_r($processing ->code.'  =>  '.HTTP_CODE_ARRAY[$processing ->code].'<br>');
+	//return false;
+	}
+echo "The number of iteration is : $i <br>";
+echo "Start Position is : $POSITION <br>";
+file_put_contents($STATISTIC_CSV, $result_array);//,LOCK_EX
+>>>>>>> 5983a35ed369cb62ac7b4ca4e677d94e8ca1023c
 
 file_put_contents($STATISTIC_CSV, $result_array);//,LOCK_EX
 $POSITION+=$LIMIT;
