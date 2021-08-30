@@ -38,8 +38,8 @@ private static $httpcode = '';
 	if ($code != 200) echo "Код ответа на запрос ".__METHOD__." = $code =>  ".HTTP_CODE_ARRAY[$code]."<br>";
     }
 
-    static function log_report($item,$property,$code,$text){
-    $row = "-------\n".$item." => ".$property."\n Код - ".$code."\n -  ".$text."\n";
+    static function logReport($item,$property,$code,$text){
+    $row = "-------\n".$item." => ".$property."\n Код - ".$code."\n".$text."\n";
     return $row;
     }
 

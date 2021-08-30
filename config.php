@@ -12,7 +12,7 @@ const REQUEST_CONTENT_JSON = 'Content-Type: application/json';
 const RESPONSE_CONTENT_JSON = 'Accept: application/vnd.api+json';
 //const REQUEST_CONTENT_JSON = 'Content-Type: application/vnd.api+json';
 
-//const LINKS_NOT_CORRECT = 'log_';
+const LOG_NAME = 'log_';
 //const STATISTIC_CSV = 'statistic_';
 
 const TIMEOUT_DEFAULT = 3;

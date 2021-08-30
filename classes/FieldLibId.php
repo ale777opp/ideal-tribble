@@ -16,7 +16,8 @@ $this ->httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 $this ->errno = curl_errno($ch);
 $this ->class_name = get_class();
 curl_close($ch); // закрываем CURL
-return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
+//echo "<pre>";print_r($this ->httpcode);echo "</pre>";
+return Servises::ErrorCodeHandler($this ->class_name,$this ->httpcode,$this ->errno);
 }//  ---END OF CONSTRUCT
 }//  ---END OF CLASS
 ?>

@@ -2,7 +2,7 @@
 Class RequestArrayProcessing{
 	protected $token;
 	protected $dbId;
-	protected $fld;
+//	protected $fld;
 	protected $query;
 	protected $limit;
 function __construct($token, $dbId, $query,$limit,$position)
@@ -26,7 +26,7 @@ $this ->httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $this ->errno = curl_errno($ch);
 $this ->class_name = get_class();
 curl_close($ch);
-return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
+return Servises::ErrorCodeHandler($this ->class_name,$this ->httpcode,$this ->errno);
 } //---END OF CONSTRUCT
 } //---END OF CLASS
 ?>

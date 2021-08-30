@@ -10,6 +10,7 @@ function __construct($token, $dbId, $fld, $query)
 	$this ->dbId = $dbId;
 	$this ->libid = $libid;
 	$this ->fld = $fld;
+}
 $idList = [];
 $this ->query = urlencode($query);
 $request = URL_API.REQUEST_DB."/".$this ->dbId."/indexes/".$this ->fld."?filter[query]=".$this ->query;
@@ -26,6 +27,5 @@ $this ->errno = curl_errno($ch);
 $this ->class_name = get_class();
 curl_close($ch);
 return Servises::ErrorCodeHandler($this ->$class_name,$this ->$httpcode,$this ->$errno);
-}
 }
 ?>
