@@ -13,9 +13,10 @@ if ($auth[code] === 200) $TOKEN = $auth[content]->access_token;
 else return;
 
 $COUNT = 483819;
-$SubDB = 'Р428Р';
+$SubDB = 'Р524Х';
 //echo "$SubDB - база";
 $QUERY = '(ID *) AND (IZO1 HTTP://195.178.222.75:8083/PICS/CARD/'.$SubDB.'*)';//RGBI_'.$SubDB
+//var_dump($QUERY);
 $LIMIT  = 500; //ограничение в настройках OPAC-Global
 $POSITION = 0; //start_position
 
@@ -28,8 +29,9 @@ print_r("position = $POSITION <br>");
 $item_csv[] ='';
 $time = date("dmYHi");//"test"
 $STATISTIC_CSV = "test_db_400_{$SubDB}_{$time}.csv";
-
+//var_dump($STATISTIC_CSV);
 while($POSITION<$COUNT){
+
 $processing = new RequestArrayProcessing($TOKEN,IDB,$QUERY,$LIMIT,$POSITION);
 
 $COUNT = $processing ->response[meta][count];

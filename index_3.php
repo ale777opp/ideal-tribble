@@ -12,7 +12,7 @@ Servises::report($auth[code]);
 if ($auth[code] === 200) $TOKEN = $auth[content]->access_token;
 else return;
 
-$SubDB = 'Р428Р';
+$SubDB = 'P524X';
 //$result_array = [RU006217ELAR,RU01807ELART,RU204291ELAR];
 $result_array =file("test_db_400_{$SubDB}.csv");
 //$result_array =file("net_856.csv");//имя файла для обработки  net_856.csv
@@ -28,8 +28,6 @@ $logRecord = array();
 $i = 0;
 $offset = -3;
 $length = 3;
-
-
 
 foreach ($result_array as $LibId) {// цикл перебора $count
 
