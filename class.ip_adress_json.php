@@ -52,7 +52,7 @@ if ($httpcode == 200) {
 function searchQuery($token, $dbId, $fld, $query)
 {
 require('config.php');
-$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$query;// $fld.SPACE.$query
+$request = $URL_API.$REG_DB."/".$dbId.$REG_REC.$fld.SPACE.$query;
 //print_r($request.'<br>');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $request);

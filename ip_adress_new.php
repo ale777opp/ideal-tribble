@@ -2,17 +2,19 @@
 error_reporting(E_ALL);
 require_once('class.ip_adress_json.php');
 Timer::start();
+set_time_limit(0);
 
 require('config.php');
-
 $FLD = 'ID';
 $QUERY = '*';
 $LIMIT  = 500;
+$POSITION = 999;
 
 print_r('idb = '.$IDB.'<br>');
 print_r('fld = '.$FLD.'<br>');
 print_r('query = '.$QUERY.'<br>');
 print_r('limit = '.$LIMIT.'<br>');
+print_r('position = '.$POSITION.'<br>');
 
 ['code' => $httpcode, 'content' => $auth] = authOPAC();
 if ($httpcode === 200) {// -----START AUTH
@@ -27,13 +29,13 @@ $item_csv[] = "URL базы данных: ".$URL_API."\n\n\r";
 $web_arhive_value = 0;
 
 $QUERY = urlencode($QUERY);
-$QUERY = $QUERY.LIMIT.$LIMIT."&position=499".OPTIONS.LINEORD;
-//print_r($QUERY);
+$QUERY = $QUERY.LIMIT.$LIMIT.POSITION.$POSITION.OPTIONS.LINEORD;
+//print_r("$QUERY <br>");
 //"&limit=941&options[views]=SHOTFORM LINEORD";
 //"&limit=290""&limit=150&position=840"  ."&limit=295"
 ['code' => $httpcode, 'content' => $result] = searchQuery($Token,$IDB,$FLD,$QUERY);
 
-//echo "<pre>";print_r($result['links']);echo "</pre>";
+//echo "<pre> result 'links'";print_r($result['links']);echo "</pre>";
 
 // -----START OF SELECT RECORDS
     if ($httpcode === 200) {
@@ -88,7 +90,7 @@ echo "-------<br>";
 print_r($i.'. '.$response['libid'].'<br>');
 print_r($response['title'].'<br>');
 print_r($response['date'].'<br>');
-echo "<pre>";print_r($response['http']);echo "</pre>";
+//echo "<pre>";print_r($response['http']);echo "</pre>";
 
 for ($j=0;$j<count($response['http']);$j++) {
 $web_arhive = strstr($response['http'][$j], '*/');
@@ -182,7 +184,7 @@ $LINKS_NOT_CORRECT = $LINKS_NOT_CORRECT.$test.".txt";
 file_put_contents($STATISTIC_CSV, $item_csv, LOCK_EX);
 file_put_contents($LINKS_NOT_CORRECT, $LogArray, LOCK_EX);
 //echo "<pre>";print_r($Statistic);echo "</pre>";
-print_r('Число ссылок на "web.archive.org/web/" = '.$web_arhive_value.'<br>');
+print_r("<br>".'Число ссылок на "web.archive.org/web/" = '.$web_arhive_value.'<br>');
 echo Timer::finish() . ' сек.';
 
 ?>
